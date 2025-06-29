@@ -86,8 +86,8 @@ defmodule Mathex.MatrixValidators do
       {:error, "Rows should have at least one column."}
   """
   @spec validate_non_empty_columns([[number()]]) :: :ok | {:error, String.t()}
-  def validate_non_empty_columns([first_row | _rest]) do
-    if length(first_row) > 0 do
+  def validate_non_empty_columns(data) do
+    if Enum.all?(data, fn row -> length(row) > 0 end) do
       :ok
     else
       {:error, "Rows should have at least one column."}

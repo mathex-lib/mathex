@@ -1,8 +1,5 @@
 defmodule MathexTest do
-  use ExUnit.Case
-  doctest Mathex
+  use ExUnit.Case, async: true
 
-  test "greets the world" do
-    assert Mathex.hello() == :world
-  end
+  doctest Mathex
 end
