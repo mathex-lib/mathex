@@ -81,4 +81,55 @@ defmodule Mathex.MatrixTest do
       assert reason == "Rows should have at least one column"
     end
   end
+
+  describe "transpose!/1" do
+    test "returns the transposed matrix" do
+      matrix = new!([[1, 2], [3, 4]])
+      transposed = transpose!(matrix)
+
+      assert %Matrix{} = transposed
+      assert transposed.data == [[1, 3], [2, 4]]
+    end
+
+    test "raises InvalidMatrixError when input is not a Matrix struct" do
+      assert_raise InvalidMatrixError, "Invalid matrix input. Use Mathex.Matrix.new/1.", fn ->
+        transpose!([[1, 2], [3, 4]])
+      end
+    end
+  end
+
+  describe "transpose/1" do
+    test "returns success tuple with the transposed matrix" do
+      matrix = new!([[1, 2], [3, 4]])
+      {:ok, transposed} = transpose(matrix)
+
+      assert %Matrix{} = transposed
+      assert transposed.data == [[1, 3], [2, 4]]
+    end
+
+    test "returns error tuple when input is not a valid matrix" do
+      result = transpose([[1, 2], [3, 4]])
+
+      assert {:error, reason} = result
+      assert reason == "Invalid matrix input. Use Mathex.Matrix.new/1."
+    end
+  end
+
+  describe "to_list/1" do
+    test "converts a Matrix struct into an Elixir list" do
+      matrix = new!([[1, 2], [3, 4]])
+      list = to_list(matrix)
+
+      assert is_list(list) == true
+      assert list == [[1, 2], [3, 4]]
+    end
+
+    test "returns the input as is if it's not a Matrix struct" do
+      input = "NOT_A_MATRIX"
+      result = to_list(input)
+
+      assert is_binary(result) == true
+      assert result == "NOT_A_MATRIX"
+    end
+  end
 end
