@@ -132,4 +132,68 @@ defmodule Mathex.MatrixTest do
       assert result == "NOT_A_MATRIX"
     end
   end
+
+  describe "scalar_multiply!/2" do
+    test "successfully multiplies all matrix elements by the scalar" do
+      matrix = new!([[1, 2], [3, 4]])
+      result = scalar_multiply!(matrix, 5)
+
+      assert %Matrix{} = result
+      assert result.data == [[5, 10], [15, 20]]
+    end
+
+    test "raises ArithmeticError when the scalar is not a number" do
+      matrix = new!([[1, 2], [3, 4]])
+
+      assert_raise ArithmeticError, "Scalar must be a number", fn ->
+        scalar_multiply!(matrix, "3")
+      end
+    end
+
+    test "raises InvalidMatrixError when matrix is not a Matrix struct" do
+      assert_raise InvalidMatrixError, "Invalid matrix input. Use Mathex.Matrix.new/1.", fn ->
+        scalar_multiply!([[1, 2], [3, 4]], 3)
+      end
+    end
+
+    test "raises InvalidMatrixError when both inputs are wrong" do
+      assert_raise InvalidMatrixError, "Invalid matrix input. Use Mathex.Matrix.new/1.", fn ->
+        scalar_multiply!("NOT_A_MATRIX", "3")
+      end
+    end
+  end
+
+  describe "scalar_multiply/2" do
+    test "successfully multiplies all matrix elements by the scalar" do
+      matrix = new!([[1, 2], [3, 4]])
+      {:ok, result} = scalar_multiply(matrix, 5)
+
+      assert %Matrix{} = result
+      assert result.data == [[5, 10], [15, 20]]
+    end
+
+    test "returns error tuple when the scalar is not a number" do
+      matrix = new!([[1, 2], [3, 4]])
+      result = scalar_multiply(matrix, "3")
+
+      assert {:error, reason} = result
+      assert reason == "Scalar must be a number"
+    end
+
+    test "returns error tuple when martix is not a Matrix struct" do
+      matrix = [[1, 2], [3, 4]]
+      result = scalar_multiply(matrix, 3)
+
+      assert {:error, reason} = result
+      assert reason == "Invalid matrix input. Use Mathex.Matrix.new/1."
+    end
+
+    test "returns error tuple when both inputs are wrong" do
+      matrix = [[1, 2], [3, 4]]
+      result = scalar_multiply(matrix, "3")
+
+      assert {:error, reason} = result
+      assert reason == "Invalid matrix input. Use Mathex.Matrix.new/1."
+    end
+  end
 end

@@ -102,4 +102,47 @@ defmodule Mathex.Matrix do
   def to_list(%Matrix{data: data}), do: data
 
   def to_list(other), do: other
+
+  @doc """
+  Multiplies a matrix by a scalar value.
+
+  Returns a new `Matrix` struct. Raises `ArithmeticError` if the scalar is not a number,
+  or `InvalidMatrixError` if the input is not a valid `Matrix`.
+  """
+  @spec scalar_multiply!(Matrix.t(), number()) :: Matrix.t()
+  def scalar_multiply!(%Matrix{} = matrix, scalar) when is_number(scalar) do
+    {:ok, matrix} = multiply_matrix_with_scalar(matrix, scalar)
+    matrix
+  end
+
+  def scalar_multiply!(%Matrix{}, _invalid), do: raise(ArithmeticError, "Scalar must be a number")
+
+  def scalar_multiply!(_invalid, _scalar), do: raise(InvalidMatrixError)
+
+  @doc """
+  Multiplies a matrix by a scalar value.
+
+  Returns a new `Matrix` struct with each element multiplied by the scalar.
+  Returns `{:ok, result}` on success, or `{:error, reason}` if input is invalid.
+  """
+  @spec scalar_multiply(Matrix.t(), number()) :: {:ok, Matrix.t()} | {:error, String.t()}
+  def scalar_multiply(%Matrix{} = matrix, scalar) when is_number(scalar) do
+    multiply_matrix_with_scalar(matrix, scalar)
+  end
+
+  def scalar_multiply(%Matrix{}, _invalid), do: {:error, "Scalar must be a number"}
+
+  def scalar_multiply(_invalid, _scalar), do: {:error, InvalidMatrixError.exception(%{}).message}
+
+  @doc false
+  defp multiply_matrix_with_scalar(%Matrix{data: data}, scalar) do
+    result =
+      Enum.map(data, fn row ->
+        Enum.map(row, fn col ->
+          col * scalar
+        end)
+      end)
+
+    {:ok, %Matrix{data: result}}
+  end
 end

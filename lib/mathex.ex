@@ -12,4 +12,7 @@ defmodule Mathex do
   defdelegate transpose(matrix), to: Matrix
 
   defdelegate to_list(matrix), to: Matrix
+
+  defdelegate scalar_multiply!(matrix, scalar), to: Matrix
+  defdelegate scalar_multiply(matrix, scalar), to: Matrix
 end
