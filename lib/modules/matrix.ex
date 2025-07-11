@@ -145,4 +145,34 @@ defmodule Mathex.Matrix do
 
     {:ok, %Matrix{data: result}}
   end
+
+  @spec add!(Mathex.Structs.Matrix.t(), Mathex.Structs.Matrix.t()) :: Mathex.Structs.Matrix.t()
+  def add!(%Matrix{} = matrix_one, %Matrix{} = matrix_two) do
+    case add_two_matrices(matrix_one, matrix_two) do
+      {:ok, matrix} -> matrix
+      {:error, reason} -> raise InvalidMatrixError, message: reason
+    end
+  end
+
+  def add!(_, _), do: raise(InvalidMatrixError)
+
+  @doc false
+  defp add_two_matrices(%Matrix{} = matrix_one, %Matrix{} = matrix_two) do
+    with :ok <- Validators.validate_equal_dimensions(matrix_one, matrix_two) do
+      result =
+        matrix_one.data
+        |> Enum.with_index()
+        |> Enum.map(fn {row, row_index} ->
+          row
+          |> Enum.with_index()
+          |> Enum.map(fn {col, col_index} ->
+            col + Enum.at(Enum.at(matrix_two.data, row_index), col_index)
+          end)
+        end)
+
+      {:ok, %Matrix{data: result}}
+    else
+      {:error, reason} -> {:error, reason}
+    end
+  end
 end

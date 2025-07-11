@@ -8,6 +8,8 @@ defmodule Mathex.MatrixValidators do
   such as `Mathex.Matrix.new/1` or other matrix operations that depend on valid input.
   """
 
+  alias Mathex.Structs.Matrix
+
   @doc """
   Validates that the input is a list of lists.
 
@@ -91,6 +93,33 @@ defmodule Mathex.MatrixValidators do
       :ok
     else
       {:error, "Rows should have at least one column"}
+    end
+  end
+
+  @doc """
+  Validates that two matrices have the same dimensions.
+
+  Returns `:ok` if both matrices have the same number of rows and columns..
+
+  ## Examples
+      iex> m1 = Mathex.Matrix.new!([[1, 2], [3, 4]])
+      iex> m2 = Mathex.Matrix.new!([[5, 6], [7, 8]])
+      iex> Mathex.MatrixValidators.validate_equal_dimensions(m1, m2)
+      :ok
+
+      iex> m3 = Mathex.Matrix.new!([[1, 2, 3], [4, 5, 6]])
+      iex> Mathex.MatrixValidators.validate_equal_dimensions(m1, m3)
+      {:error, "Matrices should have the same dimension"}
+  """
+  @spec validate_equal_dimensions(Matrix.t(), Matrix.t()) :: :ok | {:error, String.t()}
+  def validate_equal_dimensions(%Matrix{data: data_one}, %Matrix{data: data_two}) do
+    dimension_one = {length(data_one), length(List.first(data_one))}
+    dimension_two = {length(data_two), length(List.first(data_two))}
+
+    if dimension_one == dimension_two do
+      :ok
+    else
+      {:error, "Matrices should have the same dimension"}
     end
   end
 end

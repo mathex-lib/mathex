@@ -15,4 +15,6 @@ defmodule Mathex do
 
   defdelegate scalar_multiply!(matrix, scalar), to: Matrix
   defdelegate scalar_multiply(matrix, scalar), to: Matrix
+
+  defdelegate add!(matrix_one, matrix_two), to: Matrix
 end
