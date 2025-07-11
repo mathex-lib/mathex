@@ -146,6 +146,14 @@ defmodule Mathex.Matrix do
     {:ok, %Matrix{data: result}}
   end
 
+  @doc """
+  Adds two matrices together element-wise.
+
+  Returns a new `Matrix` struct with each element being the sum of corresponding elements
+  from the two input matrices. Both matrices must have the same dimensions.
+
+  Raises `InvalidMatrixError` if either input is not a valid matrix or if their dimensions differ.
+  """
   @spec add!(Mathex.Structs.Matrix.t(), Mathex.Structs.Matrix.t()) :: Mathex.Structs.Matrix.t()
   def add!(%Matrix{} = matrix_one, %Matrix{} = matrix_two) do
     case add_two_matrices(matrix_one, matrix_two) do
