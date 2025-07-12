@@ -15,15 +15,18 @@ defmodule Mathex.MatrixValidatorsTest do
     end
 
     test "returns error for flat list" do
-      assert {:error, _} = validate_is_list_of_lists([1, 2, 3, 4])
+      assert {:error, reason} = validate_is_list_of_lists([1, 2, 3, 4])
+      assert reason == "Matrix must be a list of lists"
     end
 
     test "returns error for non-list input" do
-      assert {:error, _} = validate_is_list_of_lists(:not_a_list)
+      assert {:error, reason} = validate_is_list_of_lists(:not_a_list)
+      assert reason == "Matrix must be a list of lists"
     end
 
     test "returns error if one row is not a list" do
-      assert {:error, _} = validate_is_list_of_lists([[1, 2], 42])
+      assert {:error, reason} = validate_is_list_of_lists([[1, 2], 42])
+      assert reason == "Matrix must be a list of lists"
     end
   end
 
@@ -37,7 +40,8 @@ defmodule Mathex.MatrixValidatorsTest do
     end
 
     test "returns error for empty flat list" do
-      assert {:error, _} = validate_non_empty([])
+      assert {:error, reason} = validate_non_empty([])
+      assert reason == "Matrix must have at least one row"
     end
   end
 
@@ -55,7 +59,8 @@ defmodule Mathex.MatrixValidatorsTest do
     end
 
     test "returns error for list with different list sizes" do
-      assert {:error, _} = validate_uniform_columns([[1], [2, 3]])
+      assert {:error, reason} = validate_uniform_columns([[1], [2, 3]])
+      assert reason == "All rows must have the same number of columns"
     end
   end
 
@@ -69,11 +74,13 @@ defmodule Mathex.MatrixValidatorsTest do
     end
 
     test "returns error for a list with an empty list" do
-      assert {:error, _} = validate_non_empty_columns([[]])
+      assert {:error, reason} = validate_non_empty_columns([[]])
+      assert reason == "Rows should have at least one column"
     end
 
     test "returns error for at least one empty list" do
-      assert {:error, _} = validate_non_empty_columns([[1, 2], [], [4, 5]])
+      assert {:error, reason} = validate_non_empty_columns([[1, 2], [], [4, 5]])
+      assert reason == "Rows should have at least one column"
     end
   end
 
@@ -89,7 +96,8 @@ defmodule Mathex.MatrixValidatorsTest do
       matrix_one = Mathex.Matrix.new!([[1, 2, 3], [1, 2, 3]])
       matrix_two = Mathex.Matrix.new!([[0], [1]])
 
-      assert {:error, _} = validate_equal_dimensions(matrix_one, matrix_two)
+      assert {:error, reason} = validate_equal_dimensions(matrix_one, matrix_two)
+      assert reason == "Matrices should have the same dimension"
     end
   end
 end
