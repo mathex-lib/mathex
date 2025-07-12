@@ -107,8 +107,9 @@ defmodule Mathex.MatrixValidators do
       iex> Mathex.MatrixValidators.validate_equal_dimensions(m1, m2)
       :ok
 
-      iex> m3 = Mathex.Matrix.new!([[1, 2, 3], [4, 5, 6]])
-      iex> Mathex.MatrixValidators.validate_equal_dimensions(m1, m3)
+      iex> m1 = Mathex.Matrix.new!([[1, 2], [3, 4]])
+      iex> m2 = Mathex.Matrix.new!([[1, 2, 3], [4, 5, 6]])
+      iex> Mathex.MatrixValidators.validate_equal_dimensions(m1, m2)
       {:error, "Matrices should have the same dimension"}
   """
   @spec validate_equal_dimensions(Matrix.t(), Matrix.t()) :: :ok | {:error, String.t()}

@@ -76,4 +76,20 @@ defmodule Mathex.MatrixValidatorsTest do
       assert {:error, _} = validate_non_empty_columns([[1, 2], [], [4, 5]])
     end
   end
+
+  describe "validate_equal_dimensions/2" do
+    test "returns :ok when matrices have the same dimension" do
+      matrix_one = Mathex.Matrix.new!([[1, 2, 3], [1, 2, 3]])
+      matrix_two = Mathex.Matrix.new!([[0, 0, 1], [1, 0, 0]])
+
+      assert :ok = validate_equal_dimensions(matrix_one, matrix_two)
+    end
+
+    test "returns error if matrices have different dimensions" do
+      matrix_one = Mathex.Matrix.new!([[1, 2, 3], [1, 2, 3]])
+      matrix_two = Mathex.Matrix.new!([[0], [1]])
+
+      assert {:error, _} = validate_equal_dimensions(matrix_one, matrix_two)
+    end
+  end
 end
