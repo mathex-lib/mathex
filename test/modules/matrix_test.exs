@@ -196,4 +196,94 @@ defmodule Mathex.MatrixTest do
       assert reason == "Invalid matrix input. Use Mathex.Matrix.new/1."
     end
   end
+
+  describe "add!/2" do
+    test "successfully adds two matrices together" do
+      matrix_one = new!([[1, 2], [3, 4]])
+      matrix_two = new!([[2, 2], [4, 4]])
+
+      result = add!(matrix_one, matrix_two)
+
+      assert %Matrix{} = result
+      assert result.data == [[3, 4], [7, 8]]
+    end
+
+    test "raises InvalidMatrixError matrices have different dimensions" do
+      assert_raise InvalidMatrixError, "Matrices should have the same dimension", fn ->
+        matrix_one = new!([[1, 2], [3, 4]])
+        matrix_two = new!([[2, 2, 2, 2], [4, 4, 4, 4]])
+
+        add!(matrix_one, matrix_two)
+      end
+    end
+
+    test "raises InvalidMatrixError when first input is not a Matrix struct" do
+      assert_raise InvalidMatrixError, "Invalid matrix input. Use Mathex.Matrix.new/1.", fn ->
+        matrix = new!([[1, 2], [3, 4]])
+
+        add!(matrix, [[1, 2], [3, 4]])
+      end
+    end
+
+    test "raises InvalidMatrixError when second input is not a Matrix struct" do
+      assert_raise InvalidMatrixError, "Invalid matrix input. Use Mathex.Matrix.new/1.", fn ->
+        matrix = new!([[1, 2], [3, 4]])
+
+        add!("NOT_A_MATRIX", matrix)
+      end
+    end
+
+    test "raises InvalidMatrixError when both inputs are not a Matrix struct" do
+      assert_raise InvalidMatrixError, "Invalid matrix input. Use Mathex.Matrix.new/1.", fn ->
+        add!("NOT_A_MATRIX", [[1, 2], [3, 4]])
+      end
+    end
+  end
+
+  describe "add/2" do
+    test "successfully adds two matrices together" do
+      matrix_one = new!([[1, 2], [3, 4]])
+      matrix_two = new!([[2, 2], [4, 4]])
+
+      {:ok, matrix} = add(matrix_one, matrix_two)
+
+      assert %Matrix{} = matrix
+      assert matrix.data == [[3, 4], [7, 8]]
+    end
+
+    test "returns error tuple matrices have different dimensions" do
+      matrix_one = new!([[1, 2], [3, 4]])
+      matrix_two = new!([[2, 2, 2, 2], [4, 4, 4, 4]])
+
+      result = add(matrix_one, matrix_two)
+
+      assert {:error, reason} = result
+      assert reason == "Matrices should have the same dimension"
+    end
+
+    test "returns error tuple when first input is not a Matrix struct" do
+      matrix = new!([[1, 2], [3, 4]])
+
+      result = add(matrix, [[1, 2], [3, 4]])
+
+      assert {:error, reason} = result
+      assert reason == "Invalid matrix input. Use Mathex.Matrix.new/1."
+    end
+
+    test "returns error tuple when second input is not a Matrix struct" do
+      matrix = new!([[1, 2], [3, 4]])
+
+      result = add("NOT_A_MATRIX", matrix)
+
+      assert {:error, reason} = result
+      assert reason == "Invalid matrix input. Use Mathex.Matrix.new/1."
+    end
+
+    test "returns error tuple when both inputs are not a Matrix struct" do
+      result = add("NOT_A_MATRIX", [[1, 2], [3, 4]])
+
+      assert {:error, reason} = result
+      assert reason == "Invalid matrix input. Use Mathex.Matrix.new/1."
+    end
+  end
 end
