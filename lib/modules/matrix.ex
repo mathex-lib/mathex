@@ -154,7 +154,7 @@ defmodule Mathex.Matrix do
 
   Raises `InvalidMatrixError` if either input is not a valid matrix or if their dimensions differ.
   """
-  @spec add!(Mathex.Structs.Matrix.t(), Mathex.Structs.Matrix.t()) :: Mathex.Structs.Matrix.t()
+  @spec add!(Matrix.t(), Matrix.t()) :: Matrix.t()
   def add!(%Matrix{} = matrix_one, %Matrix{} = matrix_two) do
     case add_two_matrices(matrix_one, matrix_two) do
       {:ok, matrix} -> matrix
@@ -163,6 +163,22 @@ defmodule Mathex.Matrix do
   end
 
   def add!(_, _), do: raise(InvalidMatrixError)
+
+  @doc """
+  Adds two matrices together element-wise.
+
+  Returns `{:ok, matrix}` if both matrices are valid and have the same dimensions.
+  Returns `{:error, reason}` if validation fails or inputs are not matrices.
+  """
+  @spec add(Matrix.t(), Matrix.t()) :: {:ok, Matrix.t()} | {:error, String.t()}
+  def add(%Matrix{} = matrix_one, %Matrix{} = matrix_two) do
+    case add_two_matrices(matrix_one, matrix_two) do
+      {:ok, matrix} -> {:ok, matrix}
+      {:error, reason} -> {:error, reason}
+    end
+  end
+
+  def add(_, _), do: {:error, InvalidMatrixError.exception(%{}).message}
 
   @doc false
   defp add_two_matrices(%Matrix{} = matrix_one, %Matrix{} = matrix_two) do
